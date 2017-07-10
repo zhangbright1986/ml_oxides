@@ -2,11 +2,12 @@
 
 from ase.io import read, write
 
-ptemp=read('template/POSCAR.temp')
+ptemp=read('/Users/bright/PycharmProjects/ml_oxides/template/POSCAR.temp')
 index_bulk_A = [atom.index for atom in ptemp if atom.symbol == 'Sr']
 index_bulk_O = [atom.index for atom in ptemp if atom.symbol == 'O' and atom.position[2] < 23]
 index_bulk_B = [atom.index for atom in ptemp if atom.symbol == 'Ti' and atom.position[2] < 23]
 index_sur_B = [atom.index for atom in ptemp if atom.symbol == 'Ti' and atom.position[2] > 23]
 index_sur_O = [atom.index for atom in ptemp if atom.symbol == 'O' and atom.position[2] > 23]
+index_ads_B = min(index_sur_B)
 list_B = ['Nb', 'Mo', 'Ru', 'Rh', 'Pd', 'W', 'Ag', 'Pt', 'Ir', 'Ta','Re','Zr','Ti']
 
