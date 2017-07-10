@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 
 
-from info import ini_Atoms
+from template import template
+from template import *
 from ase.io import read, write
 
-#ptemp=read('temp.traj')
-pini=ini_Atoms()
-print pini.self.index_sur_A
+# ptemp=read('temp.traj')
+print list_B
+print index_sur_B
+print ptemp
