@@ -1,0 +1,18 @@
+#!/bin/bash 
+#SBATCH -J test
+#SBATCH --tasks-per-node=32
+#SBATCH -N 2  ###(this will give you 4x24 edison  or 4x32 on cori) 
+#SBATCH -o out.%j
+#SBATCH -e err.%j
+#SBATCH -t 24:00:00
+#SBATCH -x node57
+
+module load gcc/qe-pybeef
+
+#which pw.x 
+#which mpirun
+cd $SLURM_SUBMIT_DIR
+export OMP_NUM_THREADS=1
+
+python ./opt.py
+#python ./run_beef.py
