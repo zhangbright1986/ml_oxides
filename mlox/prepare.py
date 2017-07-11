@@ -1,60 +1,57 @@
 #!/usr/bin/env python
 
 from ase.io import read, write
-from template import *
 import numpy as np
 import os
-from ase import Atom
-
-def prepare():
-    pnew = ptemp.copy()
-    shuffle(pnew)
-    create_traj_sur(pnew)
-    create_traj_ado(pnew)
-    write('POSCAR.new', pnew)
-    print_list(pnew)
+from ase import Atoms
 
 
-def shuffle(pnew):
-    nlist = len(list_B)
-    for i in index_bulk_B:
-        ran = np.random.random_integers(nlist)
-        pnew[i].symbol = list_B[ran - 1]
-    return
-
-
-def create_traj_sur(pnew):
-    cwd=os.path.abspath('.')
-    if not os.path.isdir(cwd+'/sur'):
-        os.mkdir("{0}/sur".format(cwd))
-
-    write(cwd+'/sur/init.traj',pnew)
-
-    return
-
-
-def create_traj_ado(pnew):
+def prepare(indices, pool, dist, ads_site, infile='POSCAR.temp', ):
     cwd = os.path.abspath('.')
-    pos=pnew[index_ads_B].position
-    print pos
-    adsorbate = Atom['O',(pnew[index_ads_B].position[0],pnew[index_ads_B].position[1],pnew[index_ads_B].position[0]+1.5)]
-    pnew += adsorbate
+    dist_path = cwd + '/' + str(dist)
+    pnew = read(infile)
+    shuffle(pnew, indices, pool)
+    create_traj_sur(pnew, dist_path)
+    create_traj_ado(pnew, ads_site, dist_path)
+    print_list(pnew, indices, dist_path)
 
-    if not os.path.isdir(cwd + '/ado'):
-        os.mkdir("{0}/ado".format(cwd))
 
-    write(cwd + '/ado/init.traj', pnew)
+def shuffle(pnew, indeices, pool):
+    nlist = len(pool)
+    for i in indeices:
+        ran = np.random.random_integers(nlist)
+        pnew[i].symbol = pool[ran - 1]
     return
 
 
-def print_list(pnew):
-    output = open('doping.log', 'w')
-    for i in index_bulk_B:
+def create_traj_sur(pnew, dist_path):
+    sur_path = dist_path + '/sur'
+    if not os.path.isdir(sur_path):
+        os.makedirs(sur_path)
+
+    write(sur_path + '/init.traj', pnew)
+    write(dist_path + '/POSCAR.sur', pnew)
+    return
+
+
+def create_traj_ado(pnew, ads_site, dist_path):
+    pos = pnew[ads_site].position
+    # print pos
+    adsorbate = Atoms('O', positions=[(pos[0], pos[1], pos[2] + 1.5)])
+    pads = pnew + adsorbate
+
+    ads_path = dist_path + '/ado'
+    if not os.path.isdir(ads_path):
+        os.makedirs(ads_path)
+
+    write(ads_path + '/init.traj', pads)
+    write(dist_path + '/POSCAR.ads', pads)
+    return
+
+
+def print_list(pnew, indices, dist_path):
+    output = open(dist_path + '/doping.log', 'w')
+    for i in indices:
         output.write(str(i) + '\t' + pnew[i].symbol + '\n')
     output.close()
     return
-
-
-
-    # print index_sur_B, index_sur_O
-    # print index_bulk_A, index_bulk_B, index_bulk_O

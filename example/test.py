@@ -1,14 +1,25 @@
 #!/usr/bin/env python
 
-from ml_oxides.template import *
-from ml_oxides.prepare import *
-#from template import *
-#from prepare import *
+from mlox.prepare import *
 from ase.io import read, write
+import sys
 
-prepare()
+# customilized input
 
-# ptemp=read('temp.traj')
-print list_B
-print index_sur_B
-print ptemp
+infile = 'POSCAR.temp'
+pini = read(infile)
+indices = [atom.index for atom in pini if atom.symbol == 'Ti' and atom.position[2] < 23]
+ads_site = 72
+pool = ['Nb', 'Mo', 'Ru', 'Rh', 'Pd', 'W', 'Ag', 'Pt', 'Ir', 'Ta', 'Re', 'Zr', 'Ti']
+
+try:
+    dist = str(sys.argv[1])
+except IndexError:
+    print "Please give the name of the folder you would like to contain the calculations"
+    dist = 'trial'
+    #exit()
+
+print dist
+
+# Prepartion of Files
+prepare(indices, pool, dist, ads_site, infile=infile)
