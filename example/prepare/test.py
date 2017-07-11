@@ -9,9 +9,9 @@ import sys
 infile = 'POSCAR.temp'
 pini = read(infile)
 indices = [atom.index for atom in pini if atom.symbol == 'Ti' and atom.position[2] < 23]
-ads_site = 72
+ads_site_index = 72
 pool = ['Nb', 'Mo', 'Ru', 'Rh', 'Pd', 'W', 'Ag', 'Pt', 'Ir', 'Ta', 'Re', 'Zr', 'Ti']
-
+#nsites = len(indices)
 try:
     dist = str(sys.argv[1])
 except IndexError:
@@ -22,4 +22,5 @@ except IndexError:
 print dist
 
 # Prepartion of Files
-prepare(indices, pool, dist, ads_site, infile=infile)
+prepare=prepare(indices, pool, dist, ads_site_index, infile=infile)
+prepare.run()
