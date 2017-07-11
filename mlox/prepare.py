@@ -17,7 +17,7 @@ class prepare:
         if nsites is None or nsites > len(self.indices):
             self.nsites = len(self.indices)
         else:
-            self.nsite = nsites
+            self.nsites = nsites
 
         print str(self.nsites) + ' of ' + str(self.indices) + ' will be randomly replaced by elements from ' + str(
             self.pool) + '\n'
