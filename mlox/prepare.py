@@ -31,15 +31,25 @@ class prepare:
         self.print_list()
 
     def shuffle(self):
-        nlist = len(self.pool)
-        tmp_indices=self.indices[:]
-        for i in range(10):
-            np.random.shuffle(tmp_indices)
+        tmp_pool = self.pool[:] #copy self.pool
+        tmp_indices=self.indices[:] #copy self.indices
 
-        indices=tmp_indices[:self.nsites]
+        for i in range(10):   # shuffle 10 times
+            np.random.shuffle(tmp_indices)
+            np.random.shuffle(tmp_pool)
+
+        nelm_pnew=len(np.unique(self.pnew.get_chemical_symbols()))
+        print nelm_pnew
+        nlist=len(tmp_pool)  
+
+        if  nlist > 9 - nelm_pnew :  # avoid the ntype error 
+            nlist = 9 - nelm_pnew
+
+        indices=tmp_indices[:self.nsites] # randomly pick nsites sites to be replaced 
+        pool=tmp_pool[:nlist] # randomly pick 6 elements from pool
         for i in indices:
             ran = np.random.random_integers(nlist)
-            self.pnew[i].symbol = self.pool[ran - 1]
+            self.pnew[i].symbol = pool[ran - 1]
         return
 
 
