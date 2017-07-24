@@ -59,6 +59,7 @@ class prepare:
             os.makedirs(sur_path)
 
         write(sur_path + '/init.traj', self.pnew)
+        write(sur_path + '/POSCAR', self.pnew)
         write(self.dist_path + '/POSCAR.sur', self.pnew)
         return
 
@@ -74,6 +75,7 @@ class prepare:
             os.makedirs(ads_path)
 
         write(ads_path + '/init.traj', pads)
+        write(ads_path + '/POSCAR', pads)
         write(self.dist_path + '/POSCAR.ads', pads)
         return
 
