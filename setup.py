@@ -18,4 +18,6 @@ setup(name='mlox',
       author='Liang Zhang',
       author_email='zhangbright1986@gmail.com',
       packages=packages,
+      #include_package_data=True,
+      package_data={'mlox.scripts': ['test']},
       )
