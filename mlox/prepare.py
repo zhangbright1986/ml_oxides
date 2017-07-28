@@ -4,7 +4,7 @@ from ase.io import read, write
 import numpy as np
 import os
 from ase import Atoms
-
+import shutil
 
 class prepare:
     def __init__(self, indices, pool, dist, ads_site, nsites=None, infile='POSCAR.temp'):
@@ -24,7 +24,7 @@ class prepare:
         cwd = os.path.abspath('.')
         self.dist_path = cwd + '/' + str(dist)
 
-    def run(self):
+    def preOpt(self):
         self.shuffle()
         self.create_traj_sur()
         self.create_traj_ado()
@@ -89,3 +89,20 @@ class prepare:
 
         output.close()
         return
+
+def preSP(di):
+    cwd = os.path.abspath('.')
+    dist = cwd + '/' + str(di)
+        
+    sur_path = dist + '/sur'
+    sp_path = dist + '/estr'
+
+    if not os.path.isdir(sp_path):
+        os.makedirs(sp_path)
+        
+    if os.path.isdir(sur_path+'/min') and os.path.isfile(sur_path+'/init.traj'):
+        print sp_path
+        shutil.copyfile(sur_path+'/init.traj', sp_path+'/init.traj')
+
+    
+
