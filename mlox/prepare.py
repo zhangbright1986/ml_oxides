@@ -5,6 +5,8 @@ import numpy as np
 import os
 from ase import Atoms
 import shutil
+from ase.constraints import FixAtoms
+
 
 class prepare:
     def __init__(self, indices, pool, dist, ads_site, nsites=None, infile='POSCAR.temp'):
@@ -42,7 +44,7 @@ class prepare:
         print nelm_pnew
         nlist=len(tmp_pool)  
 
-        if  nlist > 9 - nelm_pnew :  # avoid the ntype error 
+        if  nlist > 9 - nelm_pnew :  # avoid the ntype error for QE calculator 
             nlist = 9 - nelm_pnew
 
         indices=tmp_indices[:self.nsites] # randomly pick nsites sites to be replaced 
@@ -103,6 +105,33 @@ def preSP(di):
     if os.path.isdir(sur_path+'/min') and os.path.isfile(sur_path+'/init.traj'):
         print sp_path
         shutil.copyfile(sur_path+'/init.traj', sp_path+'/init.traj')
+
+def preFro(di, site):
+    cwd = os.path.abspath('.')
+    dist = cwd + '/' + str(di)
+        
+    sur_path = dist + '/sur'
+    fro_path = dist + '/frado'
+
+    if not os.path.isdir(fro_path):
+        os.makedirs(fro_path)
+    
+    try:
+        psur=read(sur_path+'/init.traj')
+    except:
+        psur=read(sur_path+'/POSCAR.F')
+
+    pos=psur[site].position
+    
+    adsorbate = Atoms('O', positions=[(pos[0], pos[1], pos[2] + 1.5)])
+    ptmp = psur.copy()
+    c = FixAtoms(mask=[True for p in ptmp])
+    ptmp.set_constraint(c)
+    pads = ptmp + adsorbate
+    
+    write(fro_path + '/init.traj', pads)
+    write(fro_path + '/POSCAR', pads)
+
 
     
 
